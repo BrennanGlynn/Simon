@@ -5,7 +5,9 @@ var yellowBtn = document.querySelector('.yellow');
 var blueBtn = document.querySelector('.blue');
 
 var cheat = document.querySelector("#pattern");
-var yours = document.querySelector("#yourPattern");
+var score = document.querySelector(".score-label");
+var startButton = document.querySelector(".start");
+var powerButton = document.querySelector(".power");
 
 var greenSound = 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3';
 var redSound = 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3';
@@ -18,11 +20,10 @@ function Game() {
     this.score = -1;
     this.pattern = [];
     this.userPattern = [];
-    this.powerOn = function () {
-        this.power = true;
+    this.flipPower = function () {
+        this.power = !this.power;
     };
     this.playGame = function () {
-        var pattern = this.pattern;
         if (this.power) {
             switch (this.getStatus()) {
                 case -1:
@@ -38,22 +39,24 @@ function Game() {
                     //proceed with the game
                     console.log("please proceed!");
                     console.log(g);
-                    this.userPattern = [];
-                    this.score++;
-                    this.pattern.push(Math.floor(Math.random() * 4));
-                    setTimeout(function() {playPattern(pattern);},1000);
-                    cheat.innerHTML = this.pattern;
-                    yours.innerHTML = this.userPattern;
+                    this.updateGame();
                     break;
             }
         }
+    };
+    this.updateGame = function () {
+        var thisPattern = this.pattern;
+        this.userPattern = [];
+        this.pattern.push(Math.floor(Math.random() * 4));
+        score.innerHTML = ++this.score;
+        cheat.innerHTML = this.pattern;
+        setTimeout(function() {playPattern(thisPattern);},1000);
     };
     this.userInsert = function (btnValue) {
         if (this.power) {
             this.userPattern.push(btnValue);
             playSound(btnValue);
             highlightButton(btnValue);
-            yours.innerHTML = this.userPattern;
         }
     };
     this.getStatus = function () {
@@ -81,12 +84,33 @@ function Game() {
     };
 }
 
+var g = new Game();
+
 buttons.forEach(function (element) {
     element.addEventListener('click', function () {
+        //TODO: prevent user from adding to the list while the demo pattern is being played
         var value = parseInt(this.getAttribute('value'));
         g.userInsert(value);
         console.log("User inserted " + value);
     })
+})
+
+powerButton.addEventListener('click', function () {
+    if (g.power) {
+        score.innerHTML = "";
+        g.flipPower();
+        //TODO: stop all sounds that are still queued to play
+        //TODO: stop the game
+    } else {
+        g.flipPower()
+        score.innerHTML = 0;
+    }
+});
+
+startButton.addEventListener('click', function () {
+    setInterval(function () {
+        g.playGame();
+    }, 500)
 })
 
 function playPattern(pattern) {
@@ -157,11 +181,11 @@ function playSound(btnVal) {
 
 //////////////////////////////////////////////
 
-var g = new Game();
-g.powerOn();
-
-function x() {
-    g.playGame();
-}
-
-setInterval(x, 100);
+// var g = new Game();
+// g.powerOn();
+//
+// function x() {
+//     g.playGame();
+// }
+//
+// setInterval(x, 100);
