@@ -1,4 +1,8 @@
 var buttons = Array.prototype.slice.call(document.querySelectorAll('.button'));
+var greenBtn = document.querySelector('.green');
+var redBtn = document.querySelector('.red');
+var yellowBtn = document.querySelector('.yellow');
+var blueBtn = document.querySelector('.blue');
 
 var cheat = document.querySelector("#pattern");
 var yours = document.querySelector("#yourPattern");
@@ -48,6 +52,7 @@ function Game() {
         if (this.power) {
             this.userPattern.push(btnValue);
             playSound(btnValue);
+            highlightButton(btnValue);
             yours.innerHTML = this.userPattern;
         }
     };
@@ -88,8 +93,38 @@ function playPattern(pattern) {
     pattern.forEach(function (t, i) {
         setTimeout(function () {
             playSound(t);
+            highlightButton(t)
         }, i*1000)
     })
+}
+
+function highlightButton(btnVal) {
+    switch (btnVal) {
+        case 0:
+            greenBtn.classList.add('highlight');
+            setTimeout(function () {
+                greenBtn.classList.remove('highlight');
+            }, 250);
+            break;
+        case 1:
+            redBtn.classList.add('highlight');
+            setTimeout(function () {
+                redBtn.classList.remove('highlight');
+            }, 250);
+            break;
+        case 2:
+            yellowBtn.classList.add('highlight');
+            setTimeout(function () {
+                yellowBtn.classList.remove('highlight');
+            }, 250);
+            break;
+        case 3:
+            blueBtn.classList.add('highlight');
+            setTimeout(function () {
+                blueBtn.classList.remove('highlight');
+            }, 250);
+            break;
+    }
 }
 
 function playSound(btnVal) {

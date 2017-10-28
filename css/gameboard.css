@@ -1,31 +1,40 @@
 .button {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     position: absolute;
+    transition: all 250ms linear;
+    border-radius: 50%;
+    box-shadow: 0px 4px 0 #232323;
 }
 
-#green {
-    top: 0px;
-    left: 0px;
+.green {
+    top: 25px;
+    left: 25px;
     background-color: green;
 }
 
-#red {
-    top: 0px;
-    right: 0px;
+.red {
+    top: 25px;
+    right: 25px;
     background-color: red;
 }
 
-#yellow {
-    bottom: 0px;
-    left: 0px;
+.yellow {
+    bottom: 25px;
+    left: 25px;
     background-color: yellow;
 }
 
-#blue {
-    bottom: 0px;
-    right: 0px;
+.blue {
+    bottom: 25px;
+    right: 25px;
     background-color: blue;
+}
+
+.highlight {
+    background-color: white;
+    box-shadow: 0 2px 0 #232323;
+    transform: translateY(3px);
 }
 
 
@@ -34,8 +43,10 @@
     width: 400px;
     height: 400px;
     border-radius: 50%;
-    background: #232323;
+    background: #888888;
     position: relative;
+    margin: auto;
+    margin-top: 200px;
 }
 
 
