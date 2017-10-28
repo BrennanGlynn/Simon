@@ -1,3 +1,14 @@
+var buttons = Array.prototype.slice.call(document.querySelectorAll('.button'));
+
+var cheat = document.querySelector("#pattern");
+var yours = document.querySelector("#yourPattern");
+
+var greenSound = 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3';
+var redSound = 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3';
+var yellowSound = 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3';
+var blueSound = 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3';
+
+
 function Game() {
     this.power = false;
     this.score = -1;
@@ -7,12 +18,13 @@ function Game() {
         this.power = true;
     };
     this.playGame = function () {
+        var pattern = this.pattern;
         if (this.power) {
             switch (this.getStatus()) {
                 case -1:
                     //end the game
                     //endGame()
-                    console.log("end the game dickface");
+                    console.log("You've made an error!");
                     this.power = false;
                     break;
                 case 0:
@@ -22,15 +34,22 @@ function Game() {
                     //proceed with the game
                     console.log("please proceed!");
                     console.log(g);
+                    this.userPattern = [];
                     this.score++;
                     this.pattern.push(Math.floor(Math.random() * 4));
-                    this.userPattern = [];
+                    setTimeout(function() {playPattern(pattern);},1000);
+                    cheat.innerHTML = this.pattern;
+                    yours.innerHTML = this.userPattern;
                     break;
             }
         }
     };
     this.userInsert = function (btnValue) {
-      this.userPattern.push(btnValue)
+        if (this.power) {
+            this.userPattern.push(btnValue);
+            playSound(btnValue);
+            yours.innerHTML = this.userPattern;
+        }
     };
     this.getStatus = function () {
         var pattern = this.pattern;
@@ -57,6 +76,52 @@ function Game() {
     };
 }
 
+buttons.forEach(function (element) {
+    element.addEventListener('click', function () {
+        var value = parseInt(this.getAttribute('value'));
+        g.userInsert(value);
+        console.log("User inserted " + value);
+    })
+})
+
+function playPattern(pattern) {
+    pattern.forEach(function (t, i) {
+        setTimeout(function () {
+            playSound(t);
+        }, i*1000)
+    })
+}
+
+function playSound(btnVal) {
+    var audioFile;
+
+    switch (btnVal) {
+        case 0:
+            audioFile = new Audio(greenSound);
+            break;
+        case 1:
+            audioFile = new Audio(redSound);
+            break;
+        case 2:
+            audioFile = new Audio(yellowSound);
+            break;
+        case 3:
+            audioFile = new Audio(blueSound);
+            break;
+    }
+
+    audioFile.play();
+    setTimeout(function (x) {
+        return function () {
+            x.pause();
+        }
+    }(audioFile), 1000)
+}
+
+
+
+//////////////////////////////////////////////
+
 var g = new Game();
 g.powerOn();
 
@@ -65,14 +130,3 @@ function x() {
 }
 
 setInterval(x, 100);
-
-
-var buttons = Array.prototype.slice.call(document.querySelectorAll('.button'));
-
-buttons.forEach(function (element) {
-    element.addEventListener('click', function () {
-        var value = parseInt(this.getAttribute('value'));
-        g.userInsert(value);
-        console.log("User inserted " + value);
-    })
-})
