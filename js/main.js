@@ -28,7 +28,7 @@ function Game() {
             switch (this.getStatus()) {
                 case -1:
                     //end the game
-                    //endGame()
+                    endGame(this);
                     console.log("You've made an error!");
                     this.power = false;
                     break;
@@ -37,8 +37,6 @@ function Game() {
                     break;
                 case 1:
                     //proceed with the game
-                    console.log("please proceed!");
-                    console.log(g);
                     this.updateGame();
                     break;
             }
@@ -85,33 +83,16 @@ function Game() {
 }
 
 var g = new Game();
+var gameInterval;
 
-buttons.forEach(function (element) {
-    element.addEventListener('click', function () {
-        //TODO: prevent user from adding to the list while the demo pattern is being played
-        var value = parseInt(this.getAttribute('value'));
-        g.userInsert(value);
-        console.log("User inserted " + value);
-    })
-})
-
-powerButton.addEventListener('click', function () {
-    if (g.power) {
-        score.innerHTML = "";
-        g.flipPower();
-        //TODO: stop all sounds that are still queued to play
-        //TODO: stop the game
-    } else {
-        g.flipPower()
-        score.innerHTML = 0;
-    }
-});
-
-startButton.addEventListener('click', function () {
-    setInterval(function () {
-        g.playGame();
-    }, 500)
-})
+function endGame(game) {
+    game.power = false;
+    game.pattern = [];
+    game.userPattern = [];
+    game.score = 0;
+    clearInterval(gameInterval);
+    console.log(game);
+}
 
 function playPattern(pattern) {
     pattern.forEach(function (t, i) {
@@ -176,6 +157,32 @@ function playSound(btnVal) {
         }
     }(audioFile), 1000)
 }
+
+buttons.forEach(function (element) {
+    element.addEventListener('click', function () {
+        //TODO: prevent user from adding to the list while the demo pattern is being played
+        var value = parseInt(this.getAttribute('value'));
+        g.userInsert(value);
+    })
+})
+
+powerButton.addEventListener('click', function () {
+    if (g.power) {
+        score.innerHTML = "";
+        g.flipPower();
+        endGame(g);
+        //TODO: stop all sounds that are still queued to play
+    } else {
+        g.flipPower()
+        score.innerHTML = 0;
+    }
+});
+
+startButton.addEventListener('click', function () {
+    gameInterval = setInterval(function () {
+        g.playGame();
+    }, 500)
+})
 
 
 
