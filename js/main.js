@@ -13,6 +13,7 @@ var greenSound = 'https://s3.amazonaws.com/freecodecamp/simonSound1.mp3';
 var redSound = 'https://s3.amazonaws.com/freecodecamp/simonSound2.mp3';
 var yellowSound = 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3';
 var blueSound = 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3';
+var soundTimeouts = [];
 
 
 function Game() {
@@ -51,7 +52,7 @@ function Game() {
         setTimeout(function() {playPattern(thisPattern);},1000);
     };
     this.userInsert = function (btnValue) {
-        if (this.power) {
+        if (this.power && !soundTimeouts.length) {
             this.userPattern.push(btnValue);
             playSound(btnValue);
             highlightButton(btnValue);
@@ -85,21 +86,22 @@ function Game() {
 var g = new Game();
 var gameInterval;
 
-function endGame(game) {
-    game.power = false;
-    game.pattern = [];
-    game.userPattern = [];
-    game.score = 0;
+function endGame() {
+    g.power = false;
+    g.pattern = [];
+    g.userPattern = [];
+    g.score = 0;
+    score.innerHTML = "";
+    //TODO show proper game ending ui
     clearInterval(gameInterval);
-    console.log(game);
 }
 
 function playPattern(pattern) {
     pattern.forEach(function (t, i) {
-        setTimeout(function () {
+        soundTimeouts.push(setTimeout(function () {
             playSound(t);
             highlightButton(t)
-        }, i*1000)
+        }, i*1000));
     })
 }
 
@@ -154,8 +156,9 @@ function playSound(btnVal) {
     setTimeout(function (x) {
         return function () {
             x.pause();
+            soundTimeouts.splice(0, 1);
         }
-    }(audioFile), 1000)
+    }(audioFile), 1000);
 }
 
 buttons.forEach(function (element) {
@@ -179,9 +182,11 @@ powerButton.addEventListener('click', function () {
 });
 
 startButton.addEventListener('click', function () {
-    gameInterval = setInterval(function () {
-        g.playGame();
-    }, 500)
+    if (g.power) {
+        gameInterval = setInterval(function () {
+            g.playGame();
+        }, 500)
+    }
 })
 
 
