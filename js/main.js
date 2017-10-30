@@ -5,6 +5,7 @@ var yellowBtn = document.querySelector('.yellow');
 var blueBtn = document.querySelector('.blue');
 
 var cheat = document.querySelector("#pattern");
+var lives = document.querySelector(".lives");
 var score = document.querySelector(".score-label");
 var startButton = document.querySelector(".start");
 var powerButton = document.querySelector(".power");
@@ -19,8 +20,11 @@ const DEMO_DELAY = 500;
 
 
 function Game() {
+    //TODO: Strict mode
+    this.strict = false;
     this.power = false;
-    this.score = -1;
+    this.score = 0;
+    this.lives = 2;
     this.pattern = [];
     this.userPattern = [];
     this.flipPower = function () {
@@ -31,9 +35,18 @@ function Game() {
             switch (this.getStatus()) {
                 case -1:
                     //end the game
-                    endGame(this);
-                    console.log("You've made an error!");
-                    this.power = false;
+                    if (this.strict || !this.lives) {
+                        endGame();
+                    } else {
+                        this.lives--;
+                        this.userPattern = [];
+                        score.innerHTML = "OOPS!";
+                        setTimeout(function(x) {
+                            return function() {
+                                playPattern(x);
+                                updateDisplay();
+                            }}(this.pattern), DEMO_DELAY);
+                    }
                     break;
                 case 0:
                     //let the player continue
@@ -49,12 +62,12 @@ function Game() {
         var thisPattern = this.pattern;
         this.userPattern = [];
         this.pattern.push(Math.floor(Math.random() * 4));
-        score.innerHTML = ++this.score;
-        cheat.innerHTML = this.pattern;
-        setTimeout(function() {playPattern(thisPattern);},1000);
+        this.score++;
+        updateDisplay();
+        setTimeout(function() {playPattern(thisPattern);}, DEMO_DELAY);
     };
     this.userInsert = function (btnValue) {
-        if (this.power && !soundTimeouts.length) {
+        if (this.power && noTimeouts()) {
             this.userPattern.push(btnValue);
             playSound(btnValue);
             highlightButton(btnValue);
@@ -167,9 +180,12 @@ function playSound(btnVal) {
     }(audioFile), DEMO_DELAY);
 }
 
+function noTimeouts() {
+    return !soundTimeouts.length;
+}
+
 buttons.forEach(function (element) {
     element.addEventListener('click', function () {
-        //TODO: prevent user from adding to the list while the demo pattern is being played
         var value = parseInt(this.getAttribute('value'));
         g.userInsert(value);
     })
@@ -178,32 +194,44 @@ buttons.forEach(function (element) {
 powerButton.addEventListener('click', function () {
     if (g.power) {
         score.innerHTML = "";
-        g.flipPower();
-        endGame(g);
-        //TODO: stop all sounds that are still queued to play
+        endGame();
     } else {
         g.flipPower()
-        score.innerHTML = 0;
+        //score.innerHTML = "LEVEL: 0";
+        updateDisplay()
     }
 });
 
 startButton.addEventListener('click', function () {
     if (g.power) {
+        g.lives = 2;
         gameInterval = setInterval(function () {
             g.playGame();
-        }, 500)
+        }, DEMO_DELAY)
     }
 })
 
+function updateDisplay() {
+    updateLivesDisplay();
+    cheat.innerHTML = g.pattern;
+    score.innerHTML = "LEVEL: " + g.score;
+    // update lives on the display
+}
 
+function updateLivesDisplay() {
+    let numLives = g.lives;
+    let lifeElements = [];
 
-//////////////////////////////////////////////
+    while (numLives >= 0) {
+        let lifeElement = document.createElement('div');
+        lifeElement.classList.add('life');
+        lifeElements.push(lifeElement);
+        numLives--;
+    }
 
-// var g = new Game();
-// g.powerOn();
-//
-// function x() {
-//     g.playGame();
-// }
-//
-// setInterval(x, 100);
+    lives.innerHTML = "";
+
+    lifeElements.forEach(function (t) {
+        lives.appendChild(t)
+    });
+}

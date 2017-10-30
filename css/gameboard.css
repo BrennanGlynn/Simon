@@ -4,7 +4,7 @@
     border-radius: 50%;
     background: #888888;
     border: 2px solid black;
-    box-shadow: 5px 5px black;
+    /*box-shadow: 5px 5px black;*/
     position: relative;
     margin: auto;
     margin-top: 200px;
@@ -18,15 +18,28 @@
     position: absolute;
     top: 150px;
     left: 100px;
+    text-align: center;
+}
+
+.lives {
+    position: absolute;
+    top: 0;
+    left: 10px;
+}
+
+.life {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
 }
 
 .score-label {
     font-family: 'Press Start 2P';
+    font-size: 18px;
     color: black;
-    width: 20px;
-    text-align: center;
-    position: absolute;
-    left: 85px;
+    margin-top: 20px;
 }
 
 .game-label {
