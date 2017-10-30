@@ -34,9 +34,12 @@ function Game() {
         if (this.power) {
             switch (this.getStatus()) {
                 case -1:
-                    //end the game
                     if (this.strict || !this.lives) {
                         endGame();
+                        score.innerHTML = "GAME OVER"
+                        setTimeout(function () {
+                            score.innerHTML = "";
+                        }, 3000)
                     } else {
                         this.lives--;
                         this.userPattern = [];
@@ -49,11 +52,14 @@ function Game() {
                     }
                     break;
                 case 0:
-                    //let the player continue
                     break;
                 case 1:
-                    //proceed with the game
-                    this.updateGame();
+                    if (this.score < 19) {
+                        this.updateGame();
+                    } else {
+                        endGame();
+                        winner();
+                    }
                     break;
             }
         }
@@ -107,12 +113,17 @@ function endGame() {
     g.userPattern = [];
     g.score = 0;
     score.innerHTML = "";
+    lives.innerHTML = "";
     //TODO show proper game ending ui
     clearInterval(gameInterval);
     soundTimeouts.forEach(function (t) {
         clearTimeout(t);
     })
     soundTimeouts = [];
+}
+
+function winner() {
+    score.innerHTML = "WINNER!"
 }
 
 function playPattern(pattern) {
@@ -199,6 +210,7 @@ powerButton.addEventListener('click', function () {
     } else {
         g.flipPower()
         updateDisplay()
+        lives.innerHTML = "";
     }
 });
 
