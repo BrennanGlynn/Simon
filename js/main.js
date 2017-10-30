@@ -15,6 +15,8 @@ var yellowSound = 'https://s3.amazonaws.com/freecodecamp/simonSound3.mp3';
 var blueSound = 'https://s3.amazonaws.com/freecodecamp/simonSound4.mp3';
 var soundTimeouts = [];
 
+const DEMO_DELAY = 500;
+
 
 function Game() {
     this.power = false;
@@ -94,6 +96,10 @@ function endGame() {
     score.innerHTML = "";
     //TODO show proper game ending ui
     clearInterval(gameInterval);
+    soundTimeouts.forEach(function (t) {
+        clearTimeout(t);
+    })
+    soundTimeouts = [];
 }
 
 function playPattern(pattern) {
@@ -101,7 +107,7 @@ function playPattern(pattern) {
         soundTimeouts.push(setTimeout(function () {
             playSound(t);
             highlightButton(t)
-        }, i*1000));
+        }, i*DEMO_DELAY));
     })
 }
 
@@ -158,7 +164,7 @@ function playSound(btnVal) {
             x.pause();
             soundTimeouts.splice(0, 1);
         }
-    }(audioFile), 1000);
+    }(audioFile), DEMO_DELAY);
 }
 
 buttons.forEach(function (element) {
