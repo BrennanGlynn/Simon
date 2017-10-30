@@ -194,10 +194,10 @@ buttons.forEach(function (element) {
 powerButton.addEventListener('click', function () {
     if (g.power) {
         score.innerHTML = "";
+        lives.innerHTML = "";
         endGame();
     } else {
         g.flipPower()
-        //score.innerHTML = "LEVEL: 0";
         updateDisplay()
     }
 });
