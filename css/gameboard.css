@@ -12,6 +12,21 @@ button:focus {outline:0;}
     margin-top: 200px;
 }
 
+.strict {
+    position: absolute;
+    top: 120px;
+    left: 160px;
+}
+
+.strict-label {
+    font-size: 12px;
+    font-family: "Press Start 2P";
+    text-align: center;
+    align-content: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .control-board {
     width: 200px;
     height: 100px;
@@ -110,6 +125,7 @@ button:focus {outline:0;}
 
 .highlight {
     background-color: white;
-    box-shadow: 0 2px 0 #232323;
-    transform: translateY(3px);
+    box-shadow: 0 0 0 #232323;
+    transform: translate(2px, 2px);
+    /*transform: translateX(2px);*/
 }

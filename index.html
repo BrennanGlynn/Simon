@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/gameboard.css">
+        <link rel="stylesheet" href="css/switch.css">
     </head>
     <body>
         <!--[if lte IE 9]>
@@ -27,6 +28,13 @@
             <button class="button red" value="1"></button>
             <button class="button yellow" value="2"></button>
             <button class="button blue" value="3"></button>
+            <div class="strict">
+                <h1 class="strict-label">STRICT</h1>
+                <div class="onoffswitch">
+                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
+                    <label class="onoffswitch-label" for="myonoffswitch"></label>
+                </div>
+            </div>
             <div class="control-board">
                 <div class="lives">
                 </div>
@@ -35,7 +43,7 @@
                 <button class="game-label power">Power</button>
             </div>
         </div>
-        <h1 id="pattern" style="text-align: center">Empty for now</h1>
+        <!--<h1 id="pattern" style="text-align: center">Empty for now</h1>-->
 
         <script src="js/vendor/modernizr-3.5.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

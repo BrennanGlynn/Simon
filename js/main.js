@@ -4,7 +4,8 @@ var redBtn = document.querySelector('.red');
 var yellowBtn = document.querySelector('.yellow');
 var blueBtn = document.querySelector('.blue');
 
-var cheat = document.querySelector("#pattern");
+var strictBox = document.querySelector('#myonoffswitch');
+
 var lives = document.querySelector(".lives");
 var score = document.querySelector(".score-label");
 var startButton = document.querySelector(".start");
@@ -20,11 +21,10 @@ const DEMO_DELAY = 500;
 
 
 function Game() {
-    //TODO: Strict mode
     this.strict = false;
     this.power = false;
     this.score = 0;
-    this.lives = 2;
+    this.lives = 0;
     this.pattern = [];
     this.userPattern = [];
     this.flipPower = function () {
@@ -34,7 +34,7 @@ function Game() {
         if (this.power) {
             switch (this.getStatus()) {
                 case -1:
-                    if (this.strict || !this.lives) {
+                    if (!this.lives) {
                         endGame();
                         score.innerHTML = "GAME OVER"
                         setTimeout(function () {
@@ -204,28 +204,34 @@ buttons.forEach(function (element) {
 
 powerButton.addEventListener('click', function () {
     if (g.power) {
+        endGame();
         score.innerHTML = "";
         lives.innerHTML = "";
-        endGame();
     } else {
-        g.flipPower()
-        updateDisplay()
+        g.flipPower();
+        updateDisplay();
         lives.innerHTML = "";
     }
 });
 
 startButton.addEventListener('click', function () {
     if (g.power) {
-        g.lives = 2;
+        if (g.strict) {
+            g.lives = 0;
+        } else g.lives = 2;
+        console.log(g.strict);
         gameInterval = setInterval(function () {
             g.playGame();
         }, DEMO_DELAY)
     }
 })
 
+strictBox.addEventListener('click', function () {
+    g.strict = !g.strict;
+});
+
 function updateDisplay() {
     updateLivesDisplay();
-    cheat.innerHTML = g.pattern;
     score.innerHTML = "LEVEL: " + g.score;
     // update lives on the display
 }
@@ -242,7 +248,6 @@ function updateLivesDisplay() {
     }
 
     lives.innerHTML = "";
-
     lifeElements.forEach(function (t) {
         lives.appendChild(t)
     });
